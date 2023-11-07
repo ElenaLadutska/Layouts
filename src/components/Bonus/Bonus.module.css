@@ -1,0 +1,18 @@
+.title {
+  color: var(--2-e-3-a-4-c, #2E3A4C);
+  display: flex;
+  height: 28px;
+  padding: 6px 0px;
+  align-items: center;
+  align-self: stretch;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; /* 133.333% */
+  letter-spacing: -0.36px;
+  margin: 10px;
+}
+
+.title p {
+  margin-left: 6px;
+}
