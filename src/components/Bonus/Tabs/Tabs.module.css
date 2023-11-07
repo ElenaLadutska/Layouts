@@ -1,0 +1,29 @@
+.wrapperTabs {
+  display: flex;
+  padding: 2px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 6px;
+  background: var(--ebf-0-f-6, #EBF0F6);
+  box-shadow: 0px 0px 2px 0px rgba(46, 58, 76, 0.15) inset;
+  margin: 10px;
+}
+
+.tab,
+.active {
+  color: var(--959-fad, #959FAD);
+  display: flex;
+  height: 28px;
+  padding: 2px 6px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: 6px;
+}
+
+.active {
+  background: var(--54-b-7-f-9, #54B7F9);
+  color: white;
+}
