@@ -10,26 +10,28 @@ interface RotationValue {
   minDegree: number;
   maxDegree: number;
   value: number;
-};
+}
 
 const rotationValues: RotationValue[] = [
-  { minDegree: 340, maxDegree: 385, value: 100 },
+  { minDegree: 0, maxDegree: 25, value: 100 },
+  { minDegree: 340, maxDegree: 360, value: 100 },
   { minDegree: 26, maxDegree: 70, value: 50 },
   { minDegree: 71, maxDegree: 115, value: 20 },
   { minDegree: 116, maxDegree: 160, value: 50 },
   { minDegree: 161, maxDegree: 205, value: 2 },
   { minDegree: 206, maxDegree: 250, value: 5 },
   { minDegree: 251, maxDegree: 295, value: 15 },
-  { minDegree: 296, maxDegree: 339, value: 20 },
+  { minDegree: 296, maxDegree: 339, value: 2 },
 ];
 
-const VALUES1:number[] = [20, 15, 2, 100];
-const VALUES2:number[] = [5,50,20,50];
+const VALUES1: number[] = [20, 15, 2, 100];
+const VALUES2: number[] = [5, 50, 20, 50];
 
 const SpinWheel: React.FC = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const spinBtnRef = useRef<HTMLButtonElement>(null);
-  
+  const starsRef = useRef<SVGSVGElement>(null);
+
   useEffect(() => {
     const spinBtnCurrent = spinBtnRef.current;
 
@@ -50,11 +52,11 @@ const SpinWheel: React.FC = () => {
 
             if (spinBtnCurrent) {
               spinBtnCurrent.disabled = false;
-            };
-
+            }
+            
             break;
-          };
-        };
+          }
+        }
       };
 
       const rotateWheel = () => {
@@ -62,6 +64,10 @@ const SpinWheel: React.FC = () => {
 
         if (wheelRef.current) {
           wheelRef.current.style.transform = `rotate(${currentRotation}deg)`;
+        }
+
+        if (starsRef.current) {
+          starsRef.current.style.transform = `translate(-50%, -50%)`;
         }
 
         if (currentRotation >= 360) {
@@ -89,6 +95,7 @@ const SpinWheel: React.FC = () => {
 
   return (
     <div className={styles.wrapperCircle}>
+
       <div className={styles.header}>
         <h1>Spin the Wheel</h1>
         <p>and win coupons</p>
@@ -98,37 +105,30 @@ const SpinWheel: React.FC = () => {
 
       <div className={styles.wheelWrapper} ref={wheelRef}>
         <div className={styles.shadow}></div>
+
         <div className={styles.box1}>
-          {
-            VALUES1.map((value, index) => (
-              <span key={index}
-                className={styles[`span${[index + 1]}`]}
-              >
-                <b>{value}</b>
-              </span>
-            ))
-          }
+          {VALUES1.map((value, index) => (
+            <span key={index} className={styles[`span${[index + 1]}`]}>
+              <b>{value}</b>
+            </span>
+          ))}
         </div>
 
         <div className={styles.box2}>
-          {
-            VALUES2.map((value, index) => (
-              <span key={index}
-                className={styles[`span${[index + 1]}`]}>
-                <b>{value}</b>
-              </span>
-            ))
-          }
-        </div>
 
+          {VALUES2.map((value, index) => (
+            <span key={index} className={styles[`span${[index + 1]}`]}>
+              <b>{value}</b>
+            </span>
+          ))}
+        </div>
       </div>
-      <div className={styles.spinContainer}>
-          <Stars className={styles.stars} />
 
-          <button ref={spinBtnRef} id={styles.spinButton}>
-            <RepeatSVG />
-          </button>
-        </div>
+      <div className={styles.spinContainer}>
+        <button ref={spinBtnRef} id={styles.spinButton}>
+          <RepeatSVG />
+        </button>
+      </div>
     </div>
   );
 };
