@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { ReactComponent as RepeatSVG } from '../../../assets/repeat.svg';
 import { ReactComponent as Arrow } from '../../../icons/arrow.svg';
-import { ReactComponent as Stars } from '../../../icons/stars.svg';
 
 import styles from './Circle.module.css';
 
@@ -10,18 +9,20 @@ interface RotationValue {
   minDegree: number;
   maxDegree: number;
   value: number;
+  box: number;
+  index: number;
 }
 
 const rotationValues: RotationValue[] = [
-  { minDegree: 0, maxDegree: 25, value: 100 },
-  { minDegree: 340, maxDegree: 360, value: 100 },
-  { minDegree: 26, maxDegree: 70, value: 50 },
-  { minDegree: 71, maxDegree: 115, value: 20 },
-  { minDegree: 116, maxDegree: 160, value: 50 },
-  { minDegree: 161, maxDegree: 205, value: 2 },
-  { minDegree: 206, maxDegree: 250, value: 5 },
-  { minDegree: 251, maxDegree: 295, value: 15 },
-  { minDegree: 296, maxDegree: 339, value: 2 },
+  { minDegree: 0, maxDegree: 25, value: 100, box: 1, index: 4 },
+  { minDegree: 340, maxDegree: 360, value: 100, box: 1, index: 4},
+  { minDegree: 26, maxDegree: 70, value: 50, box: 2, index: 2 },
+  { minDegree: 71, maxDegree: 115, value: 20, box: 1, index: 1 },
+  { minDegree: 116, maxDegree: 160, value: 50, box: 2, index: 4 },
+  { minDegree: 161, maxDegree: 205, value: 2, box: 1, index: 3 },
+  { minDegree: 206, maxDegree: 250, value: 5, box: 2, index: 1 },
+  { minDegree: 251, maxDegree: 295, value: 15, box: 1, index: 2  },
+  { minDegree: 296, maxDegree: 339, value: 2, box: 2, index: 3  },
 ];
 
 const VALUES1: number[] = [20, 15, 2, 100];
@@ -30,12 +31,26 @@ const VALUES2: number[] = [5, 50, 20, 50];
 const SpinWheel: React.FC = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const spinBtnRef = useRef<HTMLButtonElement>(null);
-  const starsRef = useRef<SVGSVGElement>(null);
+  const [currentSpan, setCurrentSpan] = useState<{ box: number; index: number } | undefined>({box: 1, index: 4});
+  
+  const handleRotationValue = (value: number) => {
+    const matchingRotationValue = rotationValues.find(
+      (rotationValue) => rotationValue.minDegree <= value && value <= rotationValue.maxDegree
+    );
+
+    if (matchingRotationValue){
+      const {box, index} = matchingRotationValue;
+      
+      setCurrentSpan({box, index});
+    }
+  };
 
   useEffect(() => {
     const spinBtnCurrent = spinBtnRef.current;
 
     const spinBtnClickHandler = () => {
+      setCurrentSpan({box: 0, index: 0});
+      
       if (spinBtnCurrent) {
         spinBtnCurrent.disabled = true;
       }
@@ -56,7 +71,9 @@ const SpinWheel: React.FC = () => {
             
             break;
           }
-        }
+        };
+
+        handleRotationValue(currentRotation);
       };
 
       const rotateWheel = () => {
@@ -64,10 +81,6 @@ const SpinWheel: React.FC = () => {
 
         if (wheelRef.current) {
           wheelRef.current.style.transform = `rotate(${currentRotation}deg)`;
-        }
-
-        if (starsRef.current) {
-          starsRef.current.style.transform = `translate(-50%, -50%)`;
         }
 
         if (currentRotation >= 360) {
@@ -81,7 +94,9 @@ const SpinWheel: React.FC = () => {
           count = 0;
           resultValue = 101;
         }
+
       };
+
 
       const rotationInterval = window.setInterval(rotateWheel, 10);
     };
@@ -107,20 +122,31 @@ const SpinWheel: React.FC = () => {
         <div className={styles.shadow}></div>
 
         <div className={styles.box1}>
-          {VALUES1.map((value, index) => (
-            <span key={index} className={styles[`span${[index + 1]}`]}>
-              <b>{value}</b>
-            </span>
-          ))}
+          {
+            currentSpan?.box === 1 
+            ? VALUES1.map((value, index) => (
+              <span key={index} className={`${styles[`span${[index + 1]}`]} ${currentSpan?.index === index+ 1 ? styles.active : ''}`}>
+                <b>{value}</b>
+              </span>)) 
+            : VALUES1.map((value, index) => (
+                <span key={index} className={styles[`span${[index + 1]}`]}>
+                  <b>{value}</b>
+                </span>))
+          }
         </div>
 
         <div className={styles.box2}>
-
-          {VALUES2.map((value, index) => (
-            <span key={index} className={styles[`span${[index + 1]}`]}>
-              <b>{value}</b>
-            </span>
-          ))}
+        {
+            currentSpan?.box === 2 
+            ? VALUES2.map((value, index) => (
+              <span key={index} className={`${styles[`span${[index + 1]}`]} ${currentSpan?.index === index + 1 ? styles.active : ''}`}>
+                <b>{value}</b>
+              </span>)) 
+            : VALUES2.map((value, index) => (
+                <span key={index} className={styles[`span${[index + 1]}`]}>
+                  <b>{value}</b>
+                </span>))
+          }
         </div>
       </div>
 

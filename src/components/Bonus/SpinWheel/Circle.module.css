@@ -174,8 +174,7 @@ span b{
 .box2 span b {
   display: flex;
   justify-content: space-between;
-  vertical-align: middle;
-  width: 50%;
+  width: 45%;
 }
 
 .box1 span b::before,
@@ -185,7 +184,8 @@ span b{
   content: url(../../../icons/star.svg);
 }
 
-.box1 .span4 b::before {
+.box1 .active b::before,
+.box2 .active b::before {
   content: url(../../../icons/bigStar.svg);
   top: 0;
 }
