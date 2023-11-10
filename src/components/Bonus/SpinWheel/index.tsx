@@ -1,124 +1,92 @@
-import { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import React, { useEffect, useRef } from 'react';
 
-import {ReactComponent as RepeatSVG} from '../../../assets/repeat.svg';
-import {ReactComponent as Arrow} from '../../../icons/spinner-arrow.svg';
-import {ReactComponent as Stars} from '../../../icons/stars.svg';
+import { ReactComponent as RepeatSVG } from '../../../assets/repeat.svg';
+import { ReactComponent as Arrow } from '../../../icons/arrow.svg';
+import { ReactComponent as Stars } from '../../../icons/stars.svg';
 
 import styles from './Circle.module.css';
 
-const rotationValues = [
-  { minDegree: 0, maxDegree: 45, value: 100 },
-  { minDegree: 46, maxDegree: 90, value: 5 },
-  { minDegree: 91, maxDegree: 135, value: 15 },
-  { minDegree: 136, maxDegree: 180, value: 20 },
-  { minDegree: 181, maxDegree: 225, value: 2 },
-  { minDegree: 226, maxDegree: 270, value: 20 },
-  { minDegree: 271, maxDegree: 315, value: 50 },
-  { minDegree: 316, maxDegree: 360, value: 5 },
+interface RotationValue {
+  minDegree: number;
+  maxDegree: number;
+  value: number;
+};
+
+const rotationValues: RotationValue[] = [
+  { minDegree: 340, maxDegree: 385, value: 100 },
+  { minDegree: 26, maxDegree: 70, value: 50 },
+  { minDegree: 71, maxDegree: 115, value: 20 },
+  { minDegree: 116, maxDegree: 160, value: 50 },
+  { minDegree: 161, maxDegree: 205, value: 2 },
+  { minDegree: 206, maxDegree: 250, value: 5 },
+  { minDegree: 251, maxDegree: 295, value: 15 },
+  { minDegree: 296, maxDegree: 339, value: 20 },
 ];
 
-const pieColors = [
-  "#723CFF",
-  "#63BCFF",
-  "#723CFF",
-  "#63BCFF",
-  "#723CFF",
-  "#63BCFF",
-  "#723CFF",
-  "#FFB436",
-];
+const VALUES1:number[] = [20, 15, 2, 100];
+const VALUES2:number[] = [5,50,20,50];
 
 const SpinWheel: React.FC = () => {
-  const wheelRef = useRef<HTMLCanvasElement | null>(null);
+  const wheelRef = useRef<HTMLDivElement>(null);
   const spinBtnRef = useRef<HTMLButtonElement>(null);
-  const chartRef = useRef<Chart | null>(null); 
-
+  
   useEffect(() => {
-    if (wheelRef.current) {
-      const ctx = wheelRef.current.getContext('2d');
+    const spinBtnCurrent = spinBtnRef.current;
 
-      if (ctx) {
-        if (chartRef.current) {
-          chartRef.current.destroy();
+    const spinBtnClickHandler = () => {
+      if (spinBtnCurrent) {
+        spinBtnCurrent.disabled = true;
+      }
+
+      let randomDegree = Math.floor(Math.random() * (355 - 0 + 1) + 0);
+      let currentRotation = 0;
+      let count = 0;
+      let resultValue = 101;
+
+      const valueGenerator = (angleValue: number) => {
+        for (let i of rotationValues) {
+          if (angleValue >= i.minDegree && angleValue <= i.maxDegree) {
+            resultValue = i.value;
+
+            if (spinBtnCurrent) {
+              spinBtnCurrent.disabled = false;
+            };
+
+            break;
+          };
         };
+      };
 
-        const myChart = new Chart(ctx, {
-          plugins: [ChartDataLabels],
-          type: 'pie',
-          data: {
-            labels: [20, 15, 5, 10, 2, 20, 50, 100],
-            datasets: [
-              {
-              backgroundColor: pieColors,
-              data: [12, 12, 12, 12, 12, 12, 12, 12],
-              },
-          ],
-          },
-          options: {
-            responsive: true,
-            animation: { duration: 0 },
-            plugins: {
-              legend: {
-              display: false,
-              },
-              datalabels: {
-                color: '#ffffff',
-                formatter: (_, context: any) => (context.chart?.data?.labels?.[context.dataIndex] ?? '').toString(),
-                font: { size: 30, weight: 'bold', family: 'Satisfy'},
-                rotation: function (context) {
-                  const rotations = [-70, -20, 20, -110, -5, -20, 10, 245];
+      const rotateWheel = () => {
+        currentRotation += resultValue;
 
-                  return rotations[context.dataIndex];
-                },                
-              },
-            },
-          },
-        });
+        if (wheelRef.current) {
+          wheelRef.current.style.transform = `rotate(${currentRotation}deg)`;
+        }
 
-        chartRef.current = myChart;
+        if (currentRotation >= 360) {
+          count += 1;
+          resultValue -= 5;
+          currentRotation = 0;
+        } else if (count > 15 && currentRotation === randomDegree) {
+          valueGenerator(randomDegree);
+          clearInterval(rotationInterval);
 
-        let count = 0;
-        let resultValue = 101;
-
-        const valueGenerator = (angleValue: number) => {
-          for (let i of rotationValues) {
-            if (angleValue >= i.minDegree && angleValue <= i.maxDegree) {
-              resultValue = i.value;
-              break;
-            }
-          }
-        };
-
-        const spinBtnClickHandler = () => {
-          let randomDegree = Math.floor(Math.random() * (355 - 0 + 1) + 0);
-
-          let rotationInterval = window.setInterval(() => {
-            (myChart.options as any).rotation = (myChart.options as any).rotation + resultValue;
-
-            myChart.update();
-
-            if ((myChart.options as any).rotation  >= 360) {
-              count += 1;
-              resultValue -= 5;
-              (myChart.options as any).rotation  = 0;
-            } else if (count > 15 && (myChart.options as any).rotation  === randomDegree) {
-              valueGenerator(randomDegree);
-              clearInterval(rotationInterval);
-              count = 0;
-              resultValue = 101;
-            }
-          }, 10);
-        };
-
-        if (spinBtnRef?.current) {
-          spinBtnRef.current.addEventListener("click", spinBtnClickHandler);
+          count = 0;
+          resultValue = 101;
         }
       };
-  }
+
+      const rotationInterval = window.setInterval(rotateWheel, 10);
+    };
+
+    spinBtnCurrent?.addEventListener('click', spinBtnClickHandler);
+
+    return () => {
+      spinBtnCurrent?.removeEventListener('click', spinBtnClickHandler);
+    };
   }, []);
-  
+
   return (
     <div className={styles.wrapperCircle}>
       <div className={styles.header}>
@@ -126,20 +94,41 @@ const SpinWheel: React.FC = () => {
         <p>and win coupons</p>
       </div>
 
+      <Arrow className={styles.arrow} />
 
-      <div className={styles.wheelWrapper}>
-          <canvas id={styles.wheel} ref={wheelRef}></canvas>
+      <div className={styles.wheelWrapper} ref={wheelRef}>
+        <div className={styles.shadow}></div>
+        <div className={styles.box1}>
+          {
+            VALUES1.map((value, index) => (
+              <span key={index}
+                className={styles[`span${[index + 1]}`]}
+              >
+                <b>{value}</b>
+              </span>
+            ))
+          }
+        </div>
 
-          <Arrow className={styles.arrow} />
+        <div className={styles.box2}>
+          {
+            VALUES2.map((value, index) => (
+              <span key={index}
+                className={styles[`span${[index + 1]}`]}>
+                <b>{value}</b>
+              </span>
+            ))
+          }
+        </div>
 
-        <div className={styles.spinContainer}>
-          <Stars className={styles.stars}/>
-          
+      </div>
+      <div className={styles.spinContainer}>
+          <Stars className={styles.stars} />
+
           <button ref={spinBtnRef} id={styles.spinButton}>
             <RepeatSVG />
           </button>
         </div>
-      </div>
     </div>
   );
 };
