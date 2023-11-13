@@ -35,9 +35,25 @@
   height: 100%;
   position: absolute;
   border-radius: 50%;
-  margin-bottom: -8vh;
   scale: 1.25;
   background: radial-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0),rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5),rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0))
+}
+
+.leftDot,
+.rightDot {
+  position: absolute;
+  top: 16%;
+  left: 35.5%;
+  width: 2%;
+  height: 2%;
+  z-index: 3;
+  background-image: url(../../../icons/dot.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.rightDot {
+  left: 62.5%;
 }
 
 .wheelWrapper {
@@ -96,6 +112,7 @@
   position: relative;
   z-index: 1;
 }
+
 
 span{
   width: 50%;
@@ -189,3 +206,4 @@ span b{
   content: url(../../../icons/bigStar.svg);
   top: 0;
 }
+
