@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { ReactComponent as RepeatSVG } from '../../../assets/repeat.svg';
+import { ReactComponent as RepeatSVG } from '../../../assets/repeat-arrow.svg';
 import { ReactComponent as Arrow } from '../../../icons/arrow.svg';
 
 import styles from './Circle.module.css';
@@ -147,12 +147,10 @@ const SpinWheel: React.FC = () => {
                   [`span${[index + 1]}`]} ${currentSpan?.index === index + 1 
                     ? styles.active 
                     : ''}`}>
-                
                 <b>{value}</b>
               </span>)) 
             : VALUES1.map((value, index) => (
                 <span key={index} className={styles[`span${[index + 1]}`]}>
-
                   <b>{value}</b>
                 </span>))
           }
@@ -167,12 +165,10 @@ const SpinWheel: React.FC = () => {
                   `span${[index + 1]}`]} ${currentSpan?.index === index + 1 
                     ? styles.active 
                     : ''}`}>
-
                 <b>{value}</b>
               </span>)) 
             : VALUES2.map((value, index) => (
                 <span key={index} className={styles[`span${[index + 1]}`]}>
-
                   <b>{value}</b>
                 </span>))
           }
@@ -180,9 +176,11 @@ const SpinWheel: React.FC = () => {
       </div>
 
       <div className={styles.spinContainer}>
-        <button ref={spinBtnRef} id={styles.spinButton}>
-          <RepeatSVG />
-        </button>
+        <div className={styles.spinButton}>
+          <button ref={spinBtnRef} id={styles.spinSVG}>
+            <RepeatSVG />
+          </button>
+        </div>
       </div>
     </div>
   );
