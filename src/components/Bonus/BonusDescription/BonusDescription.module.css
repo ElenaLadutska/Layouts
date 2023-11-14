@@ -1,0 +1,83 @@
+.wrapperBonusDescription {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bonusContainer {
+  border-radius: 6px;
+  background: linear-gradient(180deg, #677588 0%, #41526A 100%);
+  display: flex;
+  width: 300px;
+  padding: 10px;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 10px 10px 6px;
+}
+
+.content {
+  width: 100%;
+}
+
+.image {
+  width: 78.333px;
+  height: 100px;
+  border-radius: 8px;
+}
+
+.title {
+  color: rgba(255, 255, 255, 1);
+  font-weight: 700;
+  line-height: 16px; 
+  letter-spacing: -0.28px;
+  text-transform: capitalize;
+  margin-bottom: 6px;
+}
+
+.textContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  color: lightgray;
+  font-size: 10px;
+  margin-bottom: 6px;
+}
+
+.details {
+  margin-bottom: 10px;
+  color: var(--54-b-7-f-9, #54B7F9);
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.24px;
+}
+
+.footer .textContent{
+  color: rgba(255, 255, 255, 1);
+}
+
+.experationTime {
+  font-weight: 700;
+  line-height: 16px; 
+  letter-spacing: -0.2px;
+}
+
+.progressBar {
+  height: 6px;
+  align-self: stretch;
+  background: rgba(235, 240, 246, 0.2);
+  box-shadow: 0px 0px 2px 0px rgba(46, 58, 76, 0.12) inset;
+}
+
+.done {
+  opacity: 1;
+  width: 96px;
+  height: 6px;
+  position: absolute;
+  border-radius: 2px;
+  background: var(--54-b-7-f-9, #54B7F9);
+}
